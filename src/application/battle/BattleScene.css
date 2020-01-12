@@ -1,0 +1,29 @@
+@charset "UTF-8";
+
+.duck {
+	background-image:url(application/battle/piece/image/duck.png);
+    background-repeat:no-repeat;
+    width:auto;
+    height:auto;
+}
+
+.elephant {
+	background-image:url(application/battle/piece/image/elephant.png);
+    background-repeat:  no-repeat;
+    width:auto;
+    height:auto;
+}
+
+.giraffe {
+	background-image:url(application/battle/piece/image/giraffe.png);
+    background-repeat:  no-repeat;
+    width:auto;
+    height:auto;
+}
+
+.lion {
+	background-image:url(application/battle/piece/image/lion.png);
+    background-repeat:  no-repeat;
+    width:auto;
+    height:auto;
+}

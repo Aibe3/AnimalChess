@@ -5,13 +5,13 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 
-public class FinishedDialog {
+public class BattleFinishedDialog {
 
     private static DialogCore core = new DialogCore();
 
-    private static String player = "貴方の";
-    private static String enemy = "敵の";
-    private static String win ="負けです";
+    private static String firstPlayer = "1Pの";
+    private static String secondPlayer = "2Pの";
+    private static String win ="勝ちです";
     
     /**
      * 勝敗を表示するダイアログを表示する。
@@ -19,8 +19,8 @@ public class FinishedDialog {
      */
     public static void show(boolean isWinPlayer) {
         String showMessage;
-        if (isWinPlayer) showMessage = player + win;
-        else showMessage = enemy + win;
+        if (isWinPlayer) showMessage = firstPlayer + win;
+        else showMessage = secondPlayer + win;
         Alert dialog = new Alert(AlertType.INFORMATION,
                 showMessage,
                 new ButtonType("OK", ButtonData.OK_DONE)

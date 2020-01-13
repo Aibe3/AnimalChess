@@ -15,8 +15,8 @@ import application.battle.piece.Elephant;
 import application.battle.piece.Giraffe;
 import application.battle.piece.Lion;
 import application.battle.piece.Piece;
-import application.dialog.FinishedDialog;
-import application.dialog.StartDialog;
+import application.dialog.BattleFinishedDialog;
+import application.dialog.DecideFirstPlayerDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -72,14 +72,14 @@ public class BattleController implements Initializable {
     private boolean hasSelectedPiece = false;
     
     // 
-    private boolean isPlayerTurn;
+    private boolean isFirstPlayerTurn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         init();
         //TODO:現状このタイミングでStartDialog.show()を呼び出すとうメニュー画面でダイアログが出てしまう
         //TODO:個人的にはゲーム画面が表示されたloadedのタイミングでダイアログを表示し、先攻後攻を判断したい
-        this.isPlayerTurn = StartDialog.show();
+        this.isFirstPlayerTurn = DecideFirstPlayerDialog.show();
     }
 
     /**
@@ -152,19 +152,22 @@ public class BattleController implements Initializable {
         Piece selectedPiece = (Piece) event.getPickResult().getIntersectedNode();
         System.out.println(selectedPiece);
         
-        if (selectedPiece.isEnemy() != isPlayerTurn) return;
-        
         if (selectedPiece.hasSelected()) {
+            //選択された駒の場合
             selectedPiece.setHasSelected(false);
             board.getChildren().removeIf(child -> Pane.class.equals(child.getClass()));
             hasSelectedPiece = false;
+        } else if (selectedPiece.isEnemy() == isFirstPlayerTurn) {
+            //見方の駒の場合
+            return;
         } else {
+            //敵の駒の場合
             selectedPiece.setHasSelected(true);
             showRangePane(selectedPiece);
             hasSelectedPiece = true;
         }
         
-        this.isPlayerTurn = !this.isPlayerTurn;
+        this.isFirstPlayerTurn = !this.isFirstPlayerTurn;
     }
     
     private void showRangePane(Piece selectedPiece) {
@@ -232,7 +235,7 @@ public class BattleController implements Initializable {
             board.getChildren().remove(clickedPiece);
             if (Lion.class.equals(clickedPiece.getClass())) {
                 boolean isWinPlayer = clickedPiece.isEnemy();
-                FinishedDialog.show(isWinPlayer);
+                BattleFinishedDialog.show(isWinPlayer);
                 init();
                 return;
             } else {
@@ -324,7 +327,7 @@ public class BattleController implements Initializable {
     @FXML
     public void onStartClicked(MouseEvent event) {
         init();
-        this.isPlayerTurn = StartDialog.show();
+        this.isFirstPlayerTurn = DecideFirstPlayerDialog.show();
     }
 
     @FXML

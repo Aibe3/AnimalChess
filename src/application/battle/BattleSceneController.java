@@ -357,11 +357,6 @@ public class BattleSceneController implements Initializable {
         onTakePieceLabelClicked(Elephant.class, true);
     }
 
-//    @FXML
-//    public void onTookLionsClicked(MouseEvent event) {
-//        onTakePieceLabelClicked(Lion.class, true);
-//    }
-
     @FXML
     public void onTakenDucksClicked(MouseEvent event) {
         onTakePieceLabelClicked(Duck.class, false);
@@ -376,11 +371,6 @@ public class BattleSceneController implements Initializable {
     public void onTakenElephantsClicked(MouseEvent event) {
         onTakePieceLabelClicked(Elephant.class, false);
     }
-
-//    @FXML
-//    public void onTakenLionsClicked(MouseEvent event) {
-//        onTakePieceLabelClicked(Duck.class, true);
-//    }
 
     @FXML
     public void onPlayFirstClicked(MouseEvent event) {

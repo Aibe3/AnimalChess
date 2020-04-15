@@ -164,8 +164,8 @@ public abstract class Piece extends ImageView {
         int newColumnIndex;
         int newRowIndex;
         
-        newColumnIndex = calcPoint(this.columnIndex, columnIndex);
-        newRowIndex = calcPoint(this.rowIndex, rowIndex);
+        newColumnIndex = calcIndex(this.columnIndex, columnIndex);
+        newRowIndex = calcIndex(this.rowIndex, rowIndex);
         
         this.columnIndex = newColumnIndex;
         this.rowIndex = newRowIndex;
@@ -180,7 +180,7 @@ public abstract class Piece extends ImageView {
      * @param movePoint
      * @return
      */
-    private int calcPoint(int nowPoint, int movePoint) {
+    private int calcIndex(int nowPoint, int movePoint) {
         int newPoint;
         if (nowPoint < movePoint) {
             newPoint = nowPoint + 1;

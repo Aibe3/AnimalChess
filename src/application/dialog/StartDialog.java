@@ -5,18 +5,18 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 
-public class DecideFirstPlayerDialog {
+public class StartDialog {
 
     private static DialogCore core = new DialogCore();
 
     /**
      * 
      */
-    private static String message = "1P先攻で開始しますか？";
+    private static String message = "先攻で開始しますか？";
     
     /**
+     * @return 
      * 
-     * @return true:1P先行, false:2P先行
      */
     public static boolean show() {
         Alert dialog = new Alert(AlertType.INFORMATION,
@@ -26,10 +26,9 @@ public class DecideFirstPlayerDialog {
         );
         
         ButtonType result = core.show(dialog);
-        if(result.getButtonData() == ButtonData.YES) {
-            return true;
-        } else {
-            return false;
+        if(result != ButtonType.CANCEL && result != ButtonType.YES) {
+            
         }
+        return false;
     }
 }

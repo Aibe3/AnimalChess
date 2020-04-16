@@ -12,8 +12,6 @@ import javafx.scene.layout.GridPane;
 /**
  * TODO:画像をクリックしないとクリックイベントが発生しないが、うまくグリッドのサイズに合わせれない。
  * 
- * @author ketulavaru
- *
  */
 public abstract class Piece extends ImageView {
 
@@ -27,7 +25,7 @@ public abstract class Piece extends ImageView {
     protected int rowIndex;
 
     //
-    protected boolean isEnemy;
+    protected boolean is1playersPiece;
 
     /**
      * <p>移動可能な範囲、true:可、false:不可</p>
@@ -41,9 +39,9 @@ public abstract class Piece extends ImageView {
      * 　┌────┬────┬────┐<br>
      * 　│ 0 0│ 1 0│ 2 0│<br>
      * 　├────┼────┼────┤<br>
-     * 　│ 1 0│ 1 1│ 1 2│<br>
+     * 　│ 0 1│ 1 1│ 2 1│<br>
      * 　├────┼────┼────┤<br>
-     * 　│ 2 0│ 2 1│ 2 2│<br>
+     * 　│ 0 2│ 1 2│ 2 2│<br>
      * 　└────┴────┴────┘<br>
      */
     protected boolean[][] range;
@@ -70,12 +68,12 @@ public abstract class Piece extends ImageView {
         this.rowIndex = rowIndex;
     }
 
-    public boolean isEnemy() {
-        return isEnemy;
+    public boolean is1playersPiece() {
+        return is1playersPiece;
     }
 
     public boolean isEnemy(Piece piece) {
-        return isEnemy != piece.isEnemy();
+        return is1playersPiece != piece.is1playersPiece();
     }
 
     public boolean[][] getRange() {
@@ -113,16 +111,16 @@ public abstract class Piece extends ImageView {
      * 
      * @param xPosition
      * @param yPosition
-     * @param isEnemy
+     * @param is1playersPiece
      */
-    public Piece(String imageFilePath, int xPosition, int yPosition, boolean isEnemy) {
+    public Piece(String imageFilePath, boolean is1playersPiece, int xPosition, int yPosition) {
         super(new Image(imageFilePath, 64, 64, true, true));
-        if (isEnemy) super.setRotate(180);
+        if (!is1playersPiece) super.setRotate(180);
         GridPane.setConstraints(this, xPosition, yPosition);
         GridPane.setMargin(this, margin);
         this.columnIndex = xPosition;
         this.rowIndex = yPosition;
-        this.isEnemy = isEnemy;
+        this.is1playersPiece = is1playersPiece;
     }
 
     /**
@@ -166,8 +164,8 @@ public abstract class Piece extends ImageView {
         int newColumnIndex;
         int newRowIndex;
         
-        newColumnIndex = calcPoint(this.columnIndex, columnIndex);
-        newRowIndex = calcPoint(this.rowIndex, rowIndex);
+        newColumnIndex = calcIndex(this.columnIndex, columnIndex);
+        newRowIndex = calcIndex(this.rowIndex, rowIndex);
         
         this.columnIndex = newColumnIndex;
         this.rowIndex = newRowIndex;
@@ -182,7 +180,7 @@ public abstract class Piece extends ImageView {
      * @param movePoint
      * @return
      */
-    private int calcPoint(int nowPoint, int movePoint) {
+    private int calcIndex(int nowPoint, int movePoint) {
         int newPoint;
         if (nowPoint < movePoint) {
             newPoint = nowPoint + 1;

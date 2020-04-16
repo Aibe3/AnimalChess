@@ -1,11 +1,15 @@
-package application.battle.board;
+package application.battle;
 
 import java.awt.Point;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
+import application.SceneController;
+import application.battle.board.RangePane;
 import application.battle.piece.Duck;
 import application.battle.piece.Elephant;
 import application.battle.piece.Giraffe;
@@ -13,37 +17,68 @@ import application.battle.piece.Lion;
 import application.battle.piece.Piece;
 import application.dialog.BattleFinishedDialog;
 import application.dialog.DecideFirstPlayerDialog;
+import javafx.scene.input.MouseEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
-public class Board {
+public class BattleSceneController implements Initializable {
 
-    //
+    @FXML
     private GridPane board;
 
+    @FXML
+    private Label tookDucks;
     private int tookDuckCount;
 
+    @FXML
+    private Label tookGiraffes;
     private int tookGiraffeCount;
 
+    @FXML
+    private Label tookElephants;
     private int tookElephantCount;
 
+    @FXML
+    private Label takenDucks;
     private int takenDuckCount;
 
+    @FXML
+    private Label takenGiraffes;
     private int takenGiraffeCount;
 
+    @FXML
+    private Label takenElephants;
     private int takenElephantCount;
+
+    @FXML
+    private ToggleButton playFirst;
+
+    @FXML
+    private Button start;
+
+    @FXML
+    private Button reset;
+
+    @FXML
+    private Button back;
 
     private Class<?> selectedPiece = null;
 
     private boolean is1playerTurn;
 
-    public Board(GridPane boardControl) {
-        this.board = boardControl;
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         init();
+        //TODO:現状このタイミングでStartDialog.show()を呼び出すとうメニュー画面でダイアログが出てしまう
+        //TODO:個人的にはゲーム画面が表示されたloadedのタイミングでダイアログを表示し、先攻後攻を判断したい
+        this.is1playerTurn = DecideFirstPlayerDialog.show();
     }
 
     /**
@@ -54,19 +89,34 @@ public class Board {
         // 盤上の駒を一旦全て削除
         this.board.getChildren().removeIf(child -> !child.getClass().equals(Group.class));
 
-        // 相手の駒を生成し盤上に追加
+        // 盤上の駒を初期化
         addInitializedPiece(Duck.class, 1, 1, false);
         addInitializedPiece(Giraffe.class, 0, 0, false);
         addInitializedPiece(Elephant.class, 2, 0, false);
         addInitializedPiece(Lion.class, 1, 0, false);
 
-        // 自分の駒を生成し盤上に追加
         addInitializedPiece(Duck.class, 1, 2, true);
         addInitializedPiece(Giraffe.class, 2, 3, true);
         addInitializedPiece(Elephant.class, 0, 3, true);
         addInitializedPiece(Lion.class, 1, 3, true);
+        
+        // 持ち駒を初期化
+        updatePieceCountLabel(Duck.class, false, 0);
+        updatePieceCountLabel(Giraffe.class, false, 0);
+        updatePieceCountLabel(Elephant.class, false, 0);
+        
+        updatePieceCountLabel(Duck.class, true, 0);
+        updatePieceCountLabel(Giraffe.class, true, 0);
+        updatePieceCountLabel(Elephant.class, true, 0);
     }
 
+    /**
+     * 
+     * @param pieceType
+     * @param xPosition
+     * @param yPosition
+     * @param is1playerPiece
+     */
     private void addInitializedPiece(Class<?> pieceType, int xPosition, int yPosition, boolean is1playerPiece) {
         try {
             Constructor<?> constructor = pieceType.getConstructor(int.class, int.class, boolean.class);
@@ -78,6 +128,10 @@ public class Board {
         }
     }
 
+    /**
+     * 
+     * @param event
+     */
     private void onPieceClicked(MouseEvent event) {
         System.out.print("clicked " );
         Piece clickedPiece = (Piece) event.getPickResult().getIntersectedNode();
@@ -164,14 +218,10 @@ public class Board {
         if (clickedPiece != null && selectedPiece.isEnemy(clickedPiece)) {
             this.board.getChildren().remove(clickedPiece);
             if (Lion.class.equals(clickedPiece.getClass())) {
-                boolean isWin1Player = !clickedPiece.is1playersPiece();
-                BattleFinishedDialog.show(isWin1Player);
-                init();
-                this.is1playerTurn = DecideFirstPlayerDialog.show();
+                finishiedBattle(is1playerTurn);
                 return;
-            } else {
-                upPieceCount(clickedPiece);
             }
+            increasePieceCount(clickedPiece.getClass(), is1playerTurn);
         }
         
         // 選択されている駒を移動させる
@@ -183,33 +233,74 @@ public class Board {
         
         this.is1playerTurn = !this.is1playerTurn;
     }
-    
-    /**
-     * 
-     * @param deadPiece
-     */
-    private void upPieceCount(Piece deadPiece) {
+
+    private void finishiedBattle(Boolean isWin1Player) {
+        BattleFinishedDialog.show(isWin1Player);
+        init();
+        this.is1playerTurn = DecideFirstPlayerDialog.show();
+    }
+
+    private void increasePieceCount(Class<?> pieceClass, Boolean is1PlayerPiece) {
         String fieldPrefix;
-        if (deadPiece.is1playersPiece()) {
-            fieldPrefix = "taken" + deadPiece.getClass().getSimpleName();
+        if (is1PlayerPiece) {
+            fieldPrefix = "taken" + pieceClass.getSimpleName();
         } else {
-            fieldPrefix = "took" + deadPiece.getClass().getSimpleName();
+            fieldPrefix = "took" + pieceClass.getSimpleName();
         }
         
-        Field holdCount;
-        Field countLabel;
         try {
+            // 保持している件数の更新
+            Field holdCount;
             holdCount = this.getClass().getDeclaredField(fieldPrefix + "Count");
-            holdCount.setInt(this, holdCount.getInt(this) + 1);
-            countLabel = this.getClass().getDeclaredField(fieldPrefix + "s");
+            int count = holdCount.getInt(this) + 1;
+            holdCount.setInt(this, count);
+            updatePieceCountLabel(pieceClass, is1PlayerPiece, count);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 例外発生時はコードがバグっているのでStackTrace出力後に握りつぶす
+        }
+    }
+
+    private void decreasePieceCount(Class<?> pieceClass, Boolean is1PlayerPiece) {
+        String fieldPrefix;
+        if (is1PlayerPiece) {
+            fieldPrefix = "taken" + pieceClass.getSimpleName();
+        } else {
+            fieldPrefix = "took" + pieceClass.getSimpleName();
+        }
+        
+        try {
+            // 保持している件数の更新
+            Field holdCount;
+            holdCount = this.getClass().getDeclaredField(fieldPrefix + "Count");
+            int count = holdCount.getInt(this) - 1;
+            holdCount.setInt(this, count);
+            updatePieceCountLabel(pieceClass, is1PlayerPiece, count);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 例外発生時はコードがバグっているのでStackTrace出力後に握りつぶす
+        }
+    }
+
+    private void updatePieceCountLabel(Class<?> pieceClass, Boolean is1PlayerPiece, int count) {
+        String fieldLabelName = pieceClass.getSimpleName() + "s";
+        if (is1PlayerPiece) {
+            fieldLabelName = "took" + fieldLabelName;
+        } else {
+            fieldLabelName = "taken" + fieldLabelName;
+        }
+        
+        try {
+            // ラベルのテキストの更新
+            Field countLabel;
+            countLabel = this.getClass().getDeclaredField(fieldLabelName);
             Method setText = Label.class.getMethod("setText", String.class);
-            String newText = deadPiece.getClass().getSimpleName() + " * " + holdCount.getInt(this);
+            String newText = pieceClass.getSimpleName() + " * " + count;
             setText.invoke(countLabel.get(this), newText);
         } catch (Exception e) {
             e.printStackTrace();
             // 例外発生時はコードがバグっているのでStackTrace出力後に握りつぶす
         }
-        
     }
 
     public void putPieceToBoard(MouseEvent event) {
@@ -218,13 +309,14 @@ public class Board {
         int x = GridPane.getColumnIndex(source);
         int y = GridPane.getRowIndex(source);
         addInitializedPiece(this.selectedPiece, x, y, this.is1playerTurn);
+        decreasePieceCount(this.selectedPiece, this.is1playerTurn);
         this.selectedPiece = null;
         this.is1playerTurn = !this.is1playerTurn;
     }
 
     private void onTakePieceLabelClicked(Class<?> pieceType, boolean is1Player) {
         
-        if(this.is1playerTurn == is1Player) return;
+        if(this.is1playerTurn != is1Player) return;
         
         if(this.selectedPiece == null) {
             //盤上で駒が有るか無いかの一覧を作る
@@ -248,5 +340,59 @@ public class Board {
         } else {
             this.selectedPiece = null;
         }
+    }
+
+    @FXML
+    public void onTookDucksClicked(MouseEvent event) {
+        onTakePieceLabelClicked(Duck.class, true);
+    }
+
+    @FXML
+    public void onTookGiraffesClicked(MouseEvent event) {
+        onTakePieceLabelClicked(Giraffe.class, true);
+    }
+
+    @FXML
+    public void onTookElephantsClicked(MouseEvent event) {
+        onTakePieceLabelClicked(Elephant.class, true);
+    }
+
+    @FXML
+    public void onTakenDucksClicked(MouseEvent event) {
+        onTakePieceLabelClicked(Duck.class, false);
+    }
+
+    @FXML
+    public void onTakenGiraffesClicked(MouseEvent event) {
+        onTakePieceLabelClicked(Giraffe.class, false);
+    }
+
+    @FXML
+    public void onTakenElephantsClicked(MouseEvent event) {
+        onTakePieceLabelClicked(Elephant.class, false);
+    }
+
+    @FXML
+    public void onPlayFirstClicked(MouseEvent event) {
+        onTakePieceLabelClicked(Duck.class, true);
+    }
+
+    @FXML
+    public void onStartClicked(MouseEvent event) {
+        //TODO:今のところこのボタンResetと変わらないからあんまり意味ない
+        init();
+        this.is1playerTurn = DecideFirstPlayerDialog.show();
+    }
+
+    @FXML
+    public void onResetClicked(MouseEvent event) {
+        init();
+        this.is1playerTurn = DecideFirstPlayerDialog.show();
+    }
+
+    @FXML
+    public void onBackClicked(MouseEvent event) {
+        SceneController sceneController = SceneController.getInstance();
+        sceneController.changeScene("menu/MenuScene.fxml");
     }
 }

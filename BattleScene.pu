@@ -1,0 +1,81 @@
+@startuml
+
+enum PieceType {
+    + DUCK
+    + GIRAFFE
+    + ELEPHANT
+    + LION
+}
+
+class Piece {
+    - int rowIndex
+    - int columnIndex
+    - is1Players
+    + Piece(Boolean is1playersPiece, int xPosition, int yPosition)
+    {abstract} + PieceType getType()
+    {abstract} + List<Boolean> getRange()
+    + Boolean isEnemy(Piece piece)
+}
+
+interface IBattleViewController {
+    + showMoveArea(List<Point> points)
+    + hideMoveArea(List<Point> points)
+    + movePiece(Point currentPoint, Point movePoint)
+    + popPiece(PieceType type, Boolean is1PlayersPiece, Point putPoint)
+    + pushPiece(PieceType type, Boolean is1PlayersPiece)
+    + gameSet(Boolean isWin1Player)
+}
+
+class BattleSceneController {
+    - GredPane gridPane
+    - Label tookDucks
+    - Label tookGiraffes
+    - Label tookElepahnts
+    - Label takenDucks
+    - Label takenGiraffes
+    - Label takenElepahnts
+    - IBattlePresenter presenter
+}
+
+interface IBattlePresenter {
+    + void clickedPiece(Point piecePoint)
+    + void clickedMoveRange(Point movePoint)
+    + void clickedStorePiece(PieceType type, Boolean is1PlayersPiece)
+    + void init(Boolean isFirst1Player)
+    + void reset()
+}
+
+class BattlePresenter {
+    - IBattleViewController controller
+    - IBattleModel model
+}
+
+interface IBattleModel {
+    + List<Set<PieceType, Point>> init()
+    + List<Point> getCanMoveRange(Point piecePoint)
+    + List<Point> getCanPopRange(PieceType storePiece, Boolean is1PlayersPiece)
+    + Optional<Boolean> movePiece(Point movePoint)
+}
+
+class BattleModel {
+    - Piece[2][3] board
+    - int tookDuckCount
+    - int tookGiraffeCount
+    - int tookElepahntCount
+    - int takenDuckCount
+    - int takenGiraffeCount
+    - int takenElepahntCount
+}
+
+Piece --> PieceType : 包含
+
+IBattleViewController ^-- BattleSceneController
+IBattlePresenter ^-- BattlePresenter
+IBattleModel ^-- BattleModel
+
+BattleSceneController -- IBattlePresenter : イベントの通知 >
+BattlePresenter -- IBattleViewController: 画面表示の指示 >
+BattlePresenter -- IBattleModel : 処理の移譲 >
+
+
+@enduml

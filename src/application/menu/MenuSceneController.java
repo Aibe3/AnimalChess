@@ -7,9 +7,10 @@ import application.SceneController;
 import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 
-public class MenuController implements Initializable {
+public class MenuSceneController implements Initializable {
 
     @FXML
     private Button battleButton;
@@ -34,8 +35,11 @@ public class MenuController implements Initializable {
     public void onConfigClicked(MouseEvent event) {
         System.out.println("config clicked");
 
-        SceneController sceneController = SceneController.getInstance();
-        sceneController.changeScene("config/ConfigScene.fxml");
+        javafx.scene.control.Alert a = new Alert(javafx.scene.control.Alert.AlertType.WARNING);
+        a.setContentText("すまん、まだ実装できてないんや。黙って閉じてくれ。");
+        a.show();
+//        SceneController sceneController = SceneController.getInstance();
+//        sceneController.changeScene("config/ConfigScene.fxml");
     }
 
 }

@@ -3,7 +3,7 @@ package application.battle.piece;
 public class Duck extends Piece {
 
     // 自身の画像ファイル名
-    private static final String imageFile = "duck.jpeg";
+    private static final String imageFile = "Duck.jpeg";
 
     public Duck(int firstX, int firstY, boolean is1playersPiece) {
         super(imageFolder + imageFile, is1playersPiece, firstX, firstY);

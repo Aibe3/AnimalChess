@@ -68,35 +68,16 @@ public abstract class Piece extends ImageView {
         this.rowIndex = rowIndex;
     }
 
-    public boolean is1playersPiece() {
+    public boolean is1PlayersPiece() {
         return is1playersPiece;
     }
 
     public boolean isEnemy(Piece piece) {
-        return is1playersPiece != piece.is1playersPiece();
+        return is1playersPiece != piece.is1PlayersPiece();
     }
 
     public boolean[][] getRange() {
         return range;
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public List<Point> getCanMovePoints() {
-        List<Point> points = new ArrayList<>();
-        for (int xRange = 0; xRange < range.length; xRange++) {
-            for (int yRange = 0; yRange < range[xRange].length; yRange++) {
-                if (!range[xRange][yRange]) continue;
-                if (!canMove(xRange, yRange)) continue;
-                
-                int xPoint = calcNewIndex(this.columnIndex, xRange);
-                int yPoint = calcNewIndex(this.rowIndex, yRange);
-                points.add(new Point(xPoint, yPoint));
-            }
-        }
-        return points;
     }
 
     public boolean hasSelected() {
@@ -123,13 +104,33 @@ public abstract class Piece extends ImageView {
         this.is1playersPiece = is1playersPiece;
     }
 
+    public PieceType toPieceType() {
+        PieceType type = PieceType.valueOf(this.getClass().getSimpleName());
+        return type;
+    }
+
+    public List<Point> getCanMovePoints() {
+        List<Point> points = new ArrayList<>();
+        for (int xRange = 0; xRange < range.length; xRange++) {
+            for (int yRange = 0; yRange < range[xRange].length; yRange++) {
+                if (!range[xRange][yRange]) continue;
+                if (!canMove(xRange, yRange)) continue;
+                
+                int xPoint = calcNewIndex(this.columnIndex, xRange);
+                int yPoint = calcNewIndex(this.rowIndex, yRange);
+                points.add(new Point(xPoint, yPoint));
+            }
+        }
+        return points;
+    }
+
     /**
      * 
      * @param xPoint
      * @param yPoint
      * @return
      */
-    public boolean canMove(int xPoint, int yPoint) {
+    private boolean canMove(int xPoint, int yPoint) {
         // 盤面左からはみ出すパターン
         if ((columnIndex + xPoint) == 0) return false;
         // 盤面右からはみ出すパターン
@@ -141,18 +142,27 @@ public abstract class Piece extends ImageView {
         // 
         return true;
     }
-    
-    public boolean inRange(int xPoint, int yPoint) {
-        // 指定座標が移動可能かどうかを判定する
-        for(int xRange = 0; xRange < range.length; xRange++) {
-            for(int yRange = 0; yRange < range[xRange].length; yRange++) {
-                if (!range[xRange][yRange]) continue;
-                if (xPoint != calcNewIndex(this.columnIndex, xRange)) continue;
-                if (yPoint != calcNewIndex(this.rowIndex, yRange)) continue;
-                return true;
-            }
+
+    /**
+     * 
+     * @param nowIndex
+     * @param rangeIndex
+     * @return
+     */
+    private int calcNewIndex(int nowIndex, int rangeIndex) {
+        int newIndex = -99;
+        switch(rangeIndex){
+        case 0:
+            newIndex = nowIndex - 1;
+            break;
+        case 1:
+            newIndex = nowIndex;
+            break;
+        case 2:
+            newIndex = nowIndex + 1;
+            break;
         }
-        return false;
+        return newIndex;
     }
     
     /**
@@ -190,27 +200,5 @@ public abstract class Piece extends ImageView {
             newPoint = nowPoint;
         }
         return newPoint;
-    }
-
-    /**
-     * 
-     * @param nowIndex
-     * @param rangeIndex
-     * @return
-     */
-    private int calcNewIndex(int nowIndex, int rangeIndex) {
-        int newIndex = -99;
-        switch(rangeIndex){
-        case 0:
-            newIndex = nowIndex - 1;
-            break;
-        case 1:
-            newIndex = nowIndex;
-            break;
-        case 2:
-            newIndex = nowIndex + 1;
-            break;
-        }
-        return newIndex;
     }
 }

@@ -1,8 +1,8 @@
 package application.battle.piece;
 
 public enum PieceType {
-    DUCK,
-    GIRAFFE,
-    ELEPHANT,
-    LION
+    Duck,
+    Elephant,
+    Giraffe,
+    Lion;
 }

@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import application.battle.history.History;
 import application.battle.piece.PieceType;
 
 public interface IBattleModel {
-    public List<Map<PieceType, Point>> init();
+    public History init(Boolean is1playerTurn);
     public List<Point> getCanMoveRange(Point piecePoint);
     public List<Point> getCanPopRange(PieceType storePiece, Boolean is1PlayersPiece);
-    public Optional<Boolean> movePiece(Point movePoint);
+    public History movePiece(Point movePoint);
 }

@@ -10,5 +10,5 @@ public interface IBattlePresenter {
     public void clickedMoveRange(Point movePoint);
     public void clickedStorePiece(PieceType type, Boolean is1PlayersPiece);
     public void init(Boolean isFirst1Player);
-    public void reset();
+//    public void reset();
 }

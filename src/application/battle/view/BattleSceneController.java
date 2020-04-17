@@ -7,15 +7,21 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import application.SceneController;
 import application.battle.board.RangePane;
+import application.battle.piece.Duck;
+import application.battle.piece.Elephant;
+import application.battle.piece.Giraffe;
 import application.battle.piece.PieceType;
 import application.battle.presenter.BattlePresenter;
 import application.battle.presenter.IBattlePresenter;
 import application.dialog.BattleFinishedDialog;
 import application.dialog.DecideFirstPlayerDialog;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,13 +33,26 @@ public class BattleSceneController implements IBattleViewController, Initializab
     
     private IBattlePresenter presenter;
     
-    private GridPane gridPane;
+    @FXML
+    private GridPane board;
+    @FXML
     private Label tookDucks;
+    @FXML
     private Label tookGiraffes;
+    @FXML
     private Label tookElepahnts;
+    @FXML
     private Label takenDucks;
+    @FXML
     private Label takenGiraffes;
+    @FXML
     private Label takenElepahnts;
+//  @FXML
+//  private Button start;
+    @FXML
+    private Button reset;
+    @FXML
+    private Button back;
     
     // 駒のイメージファイルを格納したフォルダパス
     protected final String imageFolder = "application/battle/piece/image/";
@@ -60,7 +79,7 @@ public class BattleSceneController implements IBattleViewController, Initializab
             GridPane.setColumnIndex(range, p.x);
             GridPane.setRowIndex(range, p.y);
             return range;
-        }).forEach(r -> this.gridPane.getChildren().add(r));
+        }).forEach(r -> this.board.getChildren().add(r));
     }
     
 //    /**
@@ -77,7 +96,7 @@ public class BattleSceneController implements IBattleViewController, Initializab
     
     @Override
     public void hideMoveArea() {
-        this.gridPane.getChildren().removeIf(c -> c.getClass().equals(RangePane.class));
+        this.board.getChildren().removeIf(c -> c.getClass().equals(RangePane.class));
     }
     
     @Override
@@ -87,12 +106,12 @@ public class BattleSceneController implements IBattleViewController, Initializab
         if (!is1PlayersPiece) pieceImage.setRotate(180);
         GridPane.setConstraints(pieceImage, showPoint.x, showPoint.y);
         GridPane.setMargin(pieceImage, margin);
-        this.gridPane.getChildren().add(pieceImage);
+        this.board.getChildren().add(pieceImage);
     }
     
     @Override
     public void hidePiece(Point point) {
-        this.gridPane.getChildren()
+        this.board.getChildren()
             .filtered(c -> point.x == GridPane.getColumnIndex(c) && point.y == GridPane.getRowIndex(c))
             .removeIf(c -> c.getClass().equals(ImageView.class));
     }
@@ -123,5 +142,58 @@ public class BattleSceneController implements IBattleViewController, Initializab
     public void gameSet(Boolean isWin1Player) {
         BattleFinishedDialog.show(isWin1Player);
         presenter.init(DecideFirstPlayerDialog.show());
+    }
+    
+    @FXML
+    public void onTookDucksClicked(MouseEvent event) {
+        this.presenter.clickedStorePiece(PieceType.Duck, true);
+    }
+
+    @FXML
+    public void onTookGiraffesClicked(MouseEvent event) {
+        this.presenter.clickedStorePiece(PieceType.Giraffe, true);
+    }
+
+    @FXML
+    public void onTookElephantsClicked(MouseEvent event) {
+        this.presenter.clickedStorePiece(PieceType.Elephant, true);
+    }
+
+    @FXML
+    public void onTakenDucksClicked(MouseEvent event) {
+        this.presenter.clickedStorePiece(PieceType.Duck, false);
+    }
+
+    @FXML
+    public void onTakenGiraffesClicked(MouseEvent event) {
+        this.presenter.clickedStorePiece(PieceType.Giraffe, false);
+    }
+
+    @FXML
+    public void onTakenElephantsClicked(MouseEvent event) {
+        this.presenter.clickedStorePiece(PieceType.Elephant, false);
+    }
+
+    @FXML
+    public void onPlayFirstClicked(MouseEvent event) {
+        this.presenter.clickedStorePiece(PieceType.Duck, true)
+    }
+
+//    @FXML
+//    public void onStartClicked(MouseEvent event) {
+//        //TODO:今のところこのボタンResetと変わらないからあんまり意味ない
+//        init();
+//        this.is1playerTurn = DecideFirstPlayerDialog.show();
+//    }
+//
+    @FXML
+    public void onResetClicked(MouseEvent event) {
+        this.presenter.init(DecideFirstPlayerDialog.show());
+    }
+
+    @FXML
+    public void onBackClicked(MouseEvent event) {
+        SceneController sceneController = SceneController.getInstance();
+        sceneController.changeScene("menu/MenuScene.fxml");
     }
 }

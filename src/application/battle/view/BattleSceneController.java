@@ -9,25 +9,21 @@ import java.util.ResourceBundle;
 
 import application.SceneController;
 import application.battle.board.RangePane;
-import application.battle.piece.Duck;
-import application.battle.piece.Elephant;
-import application.battle.piece.Giraffe;
 import application.battle.piece.PieceType;
 import application.battle.presenter.BattlePresenter;
 import application.battle.presenter.IBattlePresenter;
 import application.dialog.BattleFinishedDialog;
 import application.dialog.DecideFirstPlayerDialog;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 
 public class BattleSceneController implements IBattleViewController, Initializable {
     
@@ -67,19 +63,18 @@ public class BattleSceneController implements IBattleViewController, Initializab
     
     @Override
     public void showMoveArea(List<Point> points) {
-        EventHandler<MouseEvent> event = e -> {
-            Pane clickedPane = (Pane) e.getSource();
-            int xPoint = GridPane.getColumnIndex(clickedPane);
-            int yPoint = GridPane.getRowIndex(clickedPane);
-            this.presenter.clickedMoveRange(new Point(xPoint, yPoint));
-        };
 //        points.forEach(p -> this.gridPane.add(new RangePane(event), p.x, p.y));
-        points.stream().map(p -> {
-            RangePane range = new RangePane(event);
-            GridPane.setColumnIndex(range, p.x);
-            GridPane.setRowIndex(range, p.y);
-            return range;
-        }).forEach(r -> this.board.getChildren().add(r));
+        points.stream().map(point -> {
+            RangePane canMovePane = new RangePane(event -> {
+                Node clickedPane = (Node) event.getSource();
+                int x = GridPane.getColumnIndex(clickedPane);
+                int y = GridPane.getRowIndex(clickedPane);
+                this.presenter.clickedMoveRange(new Point(x, y));
+            });
+            GridPane.setColumnIndex(canMovePane, point.x);
+            GridPane.setRowIndex(canMovePane, point.y);
+            return canMovePane;
+        }).forEach(canMovePane -> this.board.getChildren().add(canMovePane));
     }
     
 //    /**
@@ -103,6 +98,12 @@ public class BattleSceneController implements IBattleViewController, Initializab
     public void showPiece(PieceType type, Point showPoint, Boolean is1PlayersPiece) {
         String imageFile = this.imageFolder + type.toString() + ".jpeg";
         ImageView pieceImage = new ImageView(new Image(imageFile, 64, 64, true, true));
+        pieceImage.setOnMouseClicked(e -> {
+            Node clickedImage = (Node) e.getSource();
+            int x = GridPane.getColumnIndex(clickedImage);
+            int y = GridPane.getRowIndex(clickedImage);
+            this.presenter.clickedPiece(new Point(x, y));
+        });
         if (!is1PlayersPiece) pieceImage.setRotate(180);
         GridPane.setConstraints(pieceImage, showPoint.x, showPoint.y);
         GridPane.setMargin(pieceImage, margin);
@@ -148,37 +149,37 @@ public class BattleSceneController implements IBattleViewController, Initializab
     public void onTookDucksClicked(MouseEvent event) {
         this.presenter.clickedStorePiece(PieceType.Duck, true);
     }
-
+    
     @FXML
     public void onTookGiraffesClicked(MouseEvent event) {
         this.presenter.clickedStorePiece(PieceType.Giraffe, true);
     }
-
+    
     @FXML
     public void onTookElephantsClicked(MouseEvent event) {
         this.presenter.clickedStorePiece(PieceType.Elephant, true);
     }
-
+    
     @FXML
     public void onTakenDucksClicked(MouseEvent event) {
         this.presenter.clickedStorePiece(PieceType.Duck, false);
     }
-
+    
     @FXML
     public void onTakenGiraffesClicked(MouseEvent event) {
         this.presenter.clickedStorePiece(PieceType.Giraffe, false);
     }
-
+    
     @FXML
     public void onTakenElephantsClicked(MouseEvent event) {
         this.presenter.clickedStorePiece(PieceType.Elephant, false);
     }
-
+    
     @FXML
     public void onPlayFirstClicked(MouseEvent event) {
-        this.presenter.clickedStorePiece(PieceType.Duck, true)
+        this.presenter.clickedStorePiece(PieceType.Duck, true);
     }
-
+    
 //    @FXML
 //    public void onStartClicked(MouseEvent event) {
 //        //TODO:今のところこのボタンResetと変わらないからあんまり意味ない
@@ -190,7 +191,7 @@ public class BattleSceneController implements IBattleViewController, Initializab
     public void onResetClicked(MouseEvent event) {
         this.presenter.init(DecideFirstPlayerDialog.show());
     }
-
+    
     @FXML
     public void onBackClicked(MouseEvent event) {
         SceneController sceneController = SceneController.getInstance();

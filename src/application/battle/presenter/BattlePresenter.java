@@ -23,19 +23,18 @@ public class BattlePresenter implements IBattlePresenter {
     }
     
     @Override
-    public void init(Boolean isFirst1Player) {
+    public void init(boolean isFirst1Player) {
         this.view.hideMoveArea();
+        this.view.hidePiece();
         History nowSituation = this.model.init(isFirst1Player);
-        Map<Point, Piece> pieceOnBoard = nowSituation.getPieceOnBoard();
-        pieceOnBoard.keySet().forEach(po -> {
-            Piece pi = pieceOnBoard.get(po);
-            this.view.showPiece(pi.toPieceType(), po, pi.is1PlayersPiece());
-        });
+        showAllPiece(nowSituation.getPieceOnBoard());
+        updatePieceCount(nowSituation.getPieceCountOf1P(), true);
+        updatePieceCount(nowSituation.getPieceCountOf2P(), false);
     }
     
     @Override
     public void clickedPiece(Point piecePoint) {
-        List<Point> points = this.model.getCanMoveRange(piecePoint);
+        List<Point> points = this.model.getCanMovePoint(piecePoint);
         this.view.hideMoveArea();
         this.view.showMoveArea(points);
     }
@@ -43,23 +42,34 @@ public class BattlePresenter implements IBattlePresenter {
     @Override
     public void clickedMoveRange(Point movePoint) {
         History nowSituation = this.model.movePiece(movePoint);
+        
         this.view.hideMoveArea();
-        this.view.hidePiece(movePoint);
-        PieceType movePieceType = nowSituation.getPieceOnBoard().get(movePoint).toPieceType();
-        Boolean is1PlayersOperate = !nowSituation.is1PlayerTurn();
-        this.view.showPiece(movePieceType, movePoint, is1PlayersOperate);
-        if (nowSituation.hasFinishedGame()) this.view.gameSet(nowSituation.is1PlayerTurn());
+        this.view.hidePiece();
+        showAllPiece(nowSituation.getPieceOnBoard());
+        
+        if (!nowSituation.is1PlayerTurn()) updatePieceCount(nowSituation.getPieceCountOf1P(), true);
+        else updatePieceCount(nowSituation.getPieceCountOf2P(), false);
+        
+        if (nowSituation.hasFinishedGame()) this.view.gameSet(!nowSituation.is1PlayerTurn());
+    }
+    
+    private void showAllPiece(Map<Point, Piece> pieceOnBoard) {
+        pieceOnBoard.keySet().forEach(point -> {
+            Piece piece = pieceOnBoard.get(point);
+            this.view.showPiece(piece.toPieceType(), point, piece.is1PlayersPiece());
+        });
+    }
+    
+    private void updatePieceCount(Map<PieceType, Integer> countMap, boolean is1PlayersPiece) {
+        countMap.entrySet().forEach(entry -> {
+            this.view.updateTakePiece(entry.getKey(), is1PlayersPiece, entry.getValue());
+        });
     }
     
     @Override
-    public void clickedStorePiece(PieceType type, Boolean is1PlayersPiece) {
-        List<Point> points = this.model.getCanPopRange(type, is1PlayersPiece);
+    public void clickedStorePiece(PieceType type, boolean is1PlayersPiece) {
+        List<Point> points = this.model.getCanPopPoint(type, is1PlayersPiece);
         this.view.hideMoveArea();
         this.view.showMoveArea(points);
     }
-    
-//    @Override
-//    public void reset() {
-//        // TODO:これはいるのか。。。？
-//    }
 }

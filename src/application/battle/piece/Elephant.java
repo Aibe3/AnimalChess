@@ -1,14 +1,11 @@
 package application.battle.piece;
 
 public class Elephant extends Piece {
-
-    // 自身の画像ファイル名
-    private static final String imageFile = "Elephant.jpeg";
-
-    public Elephant(int firstX, int firstY, boolean is1playerPiece) {
-        super(imageFolder + imageFile, is1playerPiece, firstX, firstY);
-        super.range = new boolean[][] { { false, true, false }, 
-                                        { true, false, true },
-                                        { false, true, false } };
+    
+    public Elephant(boolean is1PlayerPiece) {
+        super(is1PlayerPiece);
+        super.moveRange = new boolean[][] { { false, true, false },
+                                            { true, false, true },
+                                            { false, true, false } };
     }
 }

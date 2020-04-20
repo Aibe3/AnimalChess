@@ -1,16 +1,14 @@
 package application.battle.model;
 
 import java.awt.Point;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import application.battle.history.History;
-import application.battle.piece.Duck;
-import application.battle.piece.Elephant;
-import application.battle.piece.Giraffe;
 import application.battle.piece.Lion;
 import application.battle.piece.Piece;
 import application.battle.piece.PieceType;
@@ -20,103 +18,115 @@ public class BattleModel implements IBattleModel {
     private final int columnSize = 3;
     private final int rowSize = 4;
     
-    private Map<Point, Piece> pieceOnBoard = new HashMap<>();
+    private Map<Point, Piece> pieceOnBoard;
     
-    private int tookDuckCount = 0;
-    private int tookGiraffeCount = 0;
-    private int tookElepahntCount = 0;
-    private int takenDuckCount = 0;
-    private int takenGiraffeCount = 0;
-    private int takenElepahntCount = 0;
+    private Map<PieceType, Integer> pieceCountOf1P = new HashMap<>();
+    private Map<PieceType, Integer> pieceCountOf2P = new HashMap<>();
     
     private Piece selectedPiece = null;
     
+    /**
+     * 駒が選択されていない場合は最後の{@link java.util.Optional.get()}で例外が発生するが<br>
+     * それはメソッドの設計方針と異なるので呼び出し側の実装誤りとし、対処しない。
+     * 
+     * @return 選択された駒の位置
+     */
     private Point selectedPiecePoint() {
-        return this.pieceOnBoard.entrySet().stream().filter(e -> e.getValue().equals(selectedPiece)).map(e -> e.getKey())
-                .findFirst().get();
+        return this.pieceOnBoard.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(selectedPiece))
+                .map(entry -> entry.getKey()).findFirst().get();
     }
     
-    private Boolean is1PlayerTurn;
+    private boolean is1PlayerTurn;
     
     @Override
-    public History init(Boolean is1PlayerTurn) {
+    public History init(boolean is1PlayerTurn) {
         this.is1PlayerTurn = is1PlayerTurn;
-        InitTakePieceCount();
+        InitPiceCount();
         InitPieceOnBoard();
         return createHistory();
     }
     
-    private void InitTakePieceCount() {
-        this.tookDuckCount = 0;
-        this.tookGiraffeCount = 0;
-        this.tookElepahntCount = 0;
-        this.takenDuckCount = 0;
-        this.takenGiraffeCount = 0;
-        this.takenElepahntCount = 0;
+    private void InitPiceCount() {
+        Consumer<Map<PieceType, Integer>> putEntryExpression = m -> {
+            m.put(PieceType.Duck, 0);
+            m.put(PieceType.Elephant, 0);
+            m.put(PieceType.Giraffe, 0);
+        };
+        putEntryExpression.accept(this.pieceCountOf1P);
+        putEntryExpression.accept(this.pieceCountOf2P);
     }
     
     private void InitPieceOnBoard() {
+        this.pieceOnBoard = new HashMap<>();
         // 1P
-        addInitializedPiece(Duck.class, 1, 2, true);
-        addInitializedPiece(Giraffe.class, 2, 3, true);
-        addInitializedPiece(Elephant.class, 0, 3, true);
-        addInitializedPiece(Lion.class, 1, 3, true);
+        addInitializedPiece(PieceType.Duck, new Point(1, 2), true);
+        addInitializedPiece(PieceType.Giraffe, new Point(2, 3), true);
+        addInitializedPiece(PieceType.Elephant, new Point(0, 3), true);
+        addInitializedPiece(PieceType.Lion, new Point(1, 3), true);
         
         // 2P
-        addInitializedPiece(Duck.class, 1, 1, false);
-        addInitializedPiece(Giraffe.class, 0, 0, false);
-        addInitializedPiece(Elephant.class, 2, 0, false);
-        addInitializedPiece(Lion.class, 1, 0, false);
+        addInitializedPiece(PieceType.Duck, new Point(1, 1), false);
+        addInitializedPiece(PieceType.Giraffe, new Point(0, 0), false);
+        addInitializedPiece(PieceType.Elephant, new Point(2, 0), false);
+        addInitializedPiece(PieceType.Lion, new Point(1, 0), false);
     }
     
-    private void addInitializedPiece(Class<? extends Piece> pieceType, int xPosition, int yPosition, boolean is1PlayerPiece) {
-        try {
-            Constructor<?> constructor = pieceType.getConstructor(int.class, int.class, boolean.class);
-            Piece piece = (Piece) constructor.newInstance(xPosition, yPosition, is1PlayerPiece);
-            this.pieceOnBoard.put(new Point(xPosition, yPosition), piece);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void addInitializedPiece(PieceType type, Point point, boolean is1PlayerPiece) {
+        Piece piece = type.toPiece(is1PlayerPiece);
+        this.pieceOnBoard.put(point, piece);
     }
     
     private History createHistory() {
-        History result = new History();
-        result.setPieceOnBoard(this.pieceOnBoard);
-        result.setIs1PlayerTurn(this.is1PlayerTurn);
-        result.setTookDuckCount(this.tookDuckCount);
-        result.setTookElepahntCount(this.tookElepahntCount);
-        result.setTookGiraffeCount(this.tookGiraffeCount);
-        result.setTakenDuckCount(this.takenDuckCount);
-        result.setTakenElepahntCount(this.takenElepahntCount);
-        result.setTakenGiraffeCount(this.takenGiraffeCount);
-        return result;
+        History now = new History();
+        now.setPieceOnBoard(this.pieceOnBoard);
+        now.setIs1PlayerTurn(this.is1PlayerTurn);
+        now.setPieceCountOf1P(this.pieceCountOf1P);
+        now.setPieceCountOf2P(this.pieceCountOf2P);
+        return now;
     }
     
     @Override
-    public List<Point> getCanMoveRange(Point piecePoint) {
+    public List<Point> getCanMovePoint(Point piecePoint) {
         List<Point> points = new ArrayList<>();
-        Piece temp = this.pieceOnBoard.get(piecePoint);
+        Piece clickedPiece = this.pieceOnBoard.get(piecePoint);
         
-        if (temp.is1PlayersPiece() != this.is1PlayerTurn) return points;
-        if (temp == this.selectedPiece) return points;
+        if (clickedPiece.is1PlayersPiece() != this.is1PlayerTurn) return points;
+        if (clickedPiece == this.selectedPiece) return points;
         
-        this.selectedPiece = temp;
+        this.selectedPiece = clickedPiece;
         
-        for (int columnIndex = 0; columnIndex < this.columnSize; columnIndex++) {
-            for (int rowIndex = 0; rowIndex < this.rowSize; rowIndex++) {
-                if (!this.selectedPiece.getRange()[columnIndex][rowIndex]) continue;
-                if (!canMoveSelectedPiece(columnIndex, rowIndex)) continue;
-                
-                int x = calcMoveRangeIndex(selectedPiecePoint().x, columnIndex);
-                int y = calcMoveRangeIndex(selectedPiecePoint().y, rowIndex);
-                points.add(new Point(x, y));
+        for (int xDirection = 0; xDirection < 3; xDirection++) {
+            for (int yDirection = 0; yDirection < 3; yDirection++) {
+                // ここでのxDirection＝＞0：左、1：そのまま、2：右
+                // ここでのyDirection＝＞0：上、1：そのまま、2：下
+                if (!canMoveSelectedPiece(xDirection, yDirection)) continue;
+                Point canMovePoint = createMovePoint(xDirection, yDirection);
+                points.add(canMovePoint);
             }
         }
         
         return points;
     }
     
-    private boolean canMoveSelectedPiece(int columnIndex, int rowIndex) {
+    private Point createMovePoint(int xDirection, int yDirection) {
+        int columnIndex = calcMovePointIndex(selectedPiecePoint().x, xDirection);
+        int rowIndex = calcMovePointIndex(selectedPiecePoint().y, yDirection);
+        return new Point(columnIndex, rowIndex);
+    }
+    
+    private boolean canMoveSelectedPiece(int xDirection, int yDirection) {
+        if (!this.selectedPiece.getMoveRange()[xDirection][yDirection]) return false;
+        if (!isInsideSelectedPiece(xDirection, yDirection)) return false;
+        Point movePoint = createMovePoint(xDirection, yDirection);
+        if (this.pieceOnBoard.containsKey(movePoint)
+                && !this.selectedPiece.isEnemy(this.pieceOnBoard.get(movePoint)))
+            return false;
+        
+        return true;
+    }
+    
+    private boolean isInsideSelectedPiece(int columnIndex, int rowIndex) {
         // 盤面左からはみ出すパターン
         if ((selectedPiecePoint().x + columnIndex) == 0) return false;
         // 盤面右からはみ出すパターン
@@ -131,23 +141,24 @@ public class BattleModel implements IBattleModel {
     
     /**
      * 二つの引数の横方向、縦方向は揃えてください
-     * @param nowIndex 
-     * @param rangeIndex 
-     * @return 
+     * 
+     * @param nowIndex
+     * @param rangeIndex
+     * @return
      */
-    private int calcMoveRangeIndex(int nowIndex, int rangeIndex) {
+    private int calcMovePointIndex(int nowIndex, int rangeIndex) {
         int newIndex = -99;
         switch (rangeIndex) {
             case 0:
-                //横方向：選択駒の左、縦方向：選択駒の上
+                // 横方向：選択駒の左、縦方向：選択駒の上
                 newIndex = nowIndex - 1;
                 break;
             case 1:
-                //横方向：選択駒と同じ、縦方向：選択駒と同じ
+                // 横方向：選択駒と同じ、縦方向：選択駒と同じ
                 newIndex = nowIndex;
                 break;
             case 2:
-                //横方向：選択駒の右、縦方向：選択駒の下
+                // 横方向：選択駒の右、縦方向：選択駒の下
                 newIndex = nowIndex + 1;
                 break;
         }
@@ -155,26 +166,57 @@ public class BattleModel implements IBattleModel {
     }
     
     @Override
-    public List<Point> getCanPopRange(PieceType storePiece, Boolean is1PlayersPiece) {
-        List<Point> result = new ArrayList<>();
+    public List<Point> getCanPopPoint(PieceType storePiece, boolean is1PlayersPiece) {
+        List<Point> points = new ArrayList<>();
         
-        if (this.is1PlayerTurn != is1PlayersPiece) return result;
+        if (this.is1PlayerTurn != is1PlayersPiece) return points;
+        Function<Boolean, Boolean> existPieceToPut = b -> {
+            Function<Map<PieceType, Integer>, Boolean> hasOneOrMore = m -> m.get(storePiece) >= 1;
+            if (b) return hasOneOrMore.apply(this.pieceCountOf1P);
+            else return hasOneOrMore.apply(this.pieceCountOf2P);
+        };
+        if (!existPieceToPut.apply(is1PlayersPiece)) return points;
+        
+        this.selectedPiece = storePiece.toPiece(is1PlayersPiece);
         
         for (int x = 0; x < this.columnSize; x++) {
             for (int y = 0; y < this.rowSize; y++) {
                 Point p = new Point(x, y);
                 if (this.pieceOnBoard.containsKey(p)) continue;
-                result.add(p);
+                points.add(p);
             }
         }
-        return result;
+        return points;
     }
     
     @Override
     public History movePiece(Point movePoint) {
-        Point temp = selectedPiecePoint();
-        this.pieceOnBoard.remove(temp);
-        this.pieceOnBoard.replace(movePoint, this.selectedPiece);
+        Piece deadPiece = this.pieceOnBoard.get(movePoint);
+        if (deadPiece != null && !deadPiece.getClass().equals(Lion.class))
+            updatePieceCount(deadPiece.toPieceType(), !deadPiece.is1PlayersPiece(), 1);
+        else if (!this.pieceOnBoard.containsValue(this.selectedPiece))
+            updatePieceCount(this.selectedPiece.toPieceType(), this.is1PlayerTurn, -1);
+        
+        if (this.pieceOnBoard.containsValue(this.selectedPiece))
+            this.pieceOnBoard.remove(selectedPiecePoint());
+        
+        if (this.pieceOnBoard.containsKey(movePoint))
+            this.pieceOnBoard.replace(movePoint, this.selectedPiece);
+        else
+            this.pieceOnBoard.put(movePoint, this.selectedPiece);
+        
+        this.is1PlayerTurn = !this.is1PlayerTurn;
+        this.selectedPiece = null;
+        
         return createHistory();
+    }
+    
+    private void updatePieceCount(PieceType type, boolean is1PlayeUpdate, int value) {
+        Consumer<Map<PieceType, Integer>> updateExpression = countMap -> {
+            int count = countMap.get(type).intValue();
+            countMap.replace(type, count + value);
+        };
+        if (is1PlayeUpdate) updateExpression.accept(this.pieceCountOf1P);
+        else updateExpression.accept(this.pieceCountOf2P);
     }
 }

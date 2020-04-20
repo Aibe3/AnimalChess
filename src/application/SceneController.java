@@ -10,26 +10,31 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
 public class SceneController {
-
+    
     private Stage stage;
-
+    
     /**
      * {@link Main#start(Stage)}から呼び出されStageを格納する。
+     * 
      * @param stage primary stage
      */
     public void setStage(Stage stage) {
-        if(this.stage == null) {
+        if (this.stage == null) {
             this.stage = stage;
-        }else {
+        } else {
             new Exception("nullじゃない時に呼び出されたら設計思想と異なるのでエラー");
         }
     }
-
+    
     private static SceneController instance;
-    private SceneController() {}
+    
+    private SceneController() {
+    }
+    
     /**
      * Singletonパターン<br>
      * この設計でどのControllerからも簡単に画面の切り替えが行える
+     * 
      * @return
      */
     public static SceneController getInstance() {
@@ -38,7 +43,7 @@ public class SceneController {
         }
         return instance;
     }
-
+    
     /**
      * 現在表示されている場面を切り替える
      * 
@@ -48,7 +53,7 @@ public class SceneController {
         this.stage.setScene(newScene);
         this.stage.show();
     }
-
+    
     /**
      * 指定されたパスでfxmlファイルを取得し、現在表示されている場面を切り替える
      * 

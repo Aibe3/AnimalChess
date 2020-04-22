@@ -38,8 +38,6 @@ public class MenuSceneController implements Initializable {
         javafx.scene.control.Alert a = new Alert(javafx.scene.control.Alert.AlertType.WARNING);
         a.setContentText("すまん、まだ実装できてないんや。黙って閉じてくれ。");
         a.show();
-//        SceneController sceneController = SceneController.getInstance();
-//        sceneController.changeScene("config/ConfigScene.fxml");
     }
     
 }

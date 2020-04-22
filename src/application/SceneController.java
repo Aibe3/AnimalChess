@@ -64,7 +64,7 @@ public class SceneController {
         try {
             Scene scene;
             Object temp = FXMLLoader.load(location);
-            Class rootClass = temp.getClass();
+            Class<?> rootClass = temp.getClass();
             if (AnchorPane.class.equals(rootClass)) {
                 scene = new Scene((AnchorPane) temp);
             } else if (BorderPane.class.equals(rootClass)) {
@@ -72,7 +72,6 @@ public class SceneController {
             } else {
                 throw new Exception(rootClass.getName() + "は想定外のrootです");
             }
-            scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
             this.changeScene(scene);
         } catch (IOException e) {
             e.printStackTrace();

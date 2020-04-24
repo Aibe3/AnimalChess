@@ -1,0 +1,56 @@
+@charset "UTF-8";
+
+body{
+    font-size: 15px;
+}
+
+.left, .center, .right{
+    display: inline-block;
+    height: 400px;
+    text-align: center;
+}
+
+.left, .right{
+    width: 150px;
+}
+
+.center{
+    width: 400px;
+    vertical-align: middle;
+}
+
+.board{
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    background-color: white;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+.board td{
+    width: 70px;
+    height: 70px;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.board td img{
+    display: table-cell;
+    vertical-align: middle;
+    margin: 0 auto;
+    transform: rotate(180deg);
+}
+
+.canMovePoint{
+    background-color: yellow;
+    opacity: 50%;
+}
+
+input[type="button"]{
+        display: block;
+        position: relative;
+        size: 60px;
+        margin: 20px auto;
+}

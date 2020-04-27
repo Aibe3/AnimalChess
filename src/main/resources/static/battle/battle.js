@@ -13,8 +13,7 @@ $(function(){
         setRequestType("Elephant");
         setRequestType("Duck");
         
-        document.battleForm.action = "/battle/clickedTookPiece";
-        document.battleForm.submit();
+        submit("/battle/clickedTookPiece");
     };
     
     $(".pieceCountOf1P > p").click(function(){
@@ -34,6 +33,11 @@ const addHidden = function(name, value){
     document.battleForm.appendChild(param);
 };
 
+const submit = function(action){
+    document.battleForm.action = action;
+    document.battleForm.submit();
+};
+
 const putPieceImage = function(type, point){
     const img = $("<img>", {
         alt: "",
@@ -41,8 +45,7 @@ const putPieceImage = function(type, point){
         on: {
             click: function(event){
                 addHidden("clickedPoint", point);
-                document.battleForm.action = "/battle/clickedPiece";
-                document.battleForm.submit();
+                submit("/battle/clickedPiece");
             }
         }
     });
@@ -55,8 +58,7 @@ const putCanMovePoint = function(point){
         on: {
             click: function(event){
                 addHidden("clickedPoint", point);
-                document.battleForm.action = "/battle/clickedCanMovePoint";
-                document.battleForm.submit();
+                submit("/battle/clickedCanMovePoint");
             }
         }
     });
@@ -66,13 +68,11 @@ const putCanMovePoint = function(point){
 const init = function(){
     const is1PlayerTurn = this.document.getElementsByName("is1PlayerTurn")[0];
     is1PlayerTurn.value = window.confirm("1P先攻で開始しますか？");
-    this.document.battleForm.action = "/battle/init";
-    this.document.battleForm.submit();
+    submit("/battle/init");
 };
 
 const back = function(){
-    this.document.battleForm.action = "/menu";
-    this.document.battleForm.submit();
+    submit("/menu");
 };
 
 const gameSet = function(winer){

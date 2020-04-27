@@ -1,11 +1,14 @@
 package com.animalchess.battle;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BattleForm {
+public class BattleForm implements Serializable {
+    
+    private static final long serialVersionUID = 3683381919421020128L;
     
     /**
      * html上での盤面の位置と駒の情報を表すマップ。<br>

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -23,11 +24,12 @@ public class BattleViewController implements IBattleViewController {
     private IBattlePresenter presenter;
     
     public BattleViewController() {
-        this.form = new BattleForm();
         this.presenter = new BattlePresenter(this);
     }
     
     public BattleForm init(boolean isFirst1Player) {
+        this.form = new BattleForm();
+        this.form.setIs1PlayerTurn(isFirst1Player);
         this.presenter.init(isFirst1Player);
         return this.form;
     }
@@ -43,13 +45,15 @@ public class BattleViewController implements IBattleViewController {
     }
     
     public BattleForm clickedMoveRange(Point movePoint) {
+        this.form.setIs1PlayerTurn(!this.form.getIs1PlayerTurn());
         this.presenter.clickedMoveRange(movePoint);
         return this.form;
     }
     
     @Override
     public void showMoveArea(List<Point> points) {
-        this.form.setCanMovePoints(points.stream().map(p -> p.x + "-" + p.y).collect(Collectors.toList()));
+        Function<Point, String> pointToString = p -> p.x + "-" + p.y;
+        this.form.setCanMovePoints(points.stream().map(pointToString).collect(Collectors.toList()));
     }
     
     @Override
@@ -60,7 +64,7 @@ public class BattleViewController implements IBattleViewController {
     @Override
     public void showPiece(PieceType type, Point showPoint, boolean is1PlayersPiece) {
         String point = showPoint.x + "-" + showPoint.y;
-        String piece = is1PlayersPiece?"1P":"2P" + type.toString();
+        String piece = (is1PlayersPiece?"1P":"2P") + type.toString();
         this.form.getPieceOnBoard().put(point, piece);
     }
     
@@ -82,8 +86,7 @@ public class BattleViewController implements IBattleViewController {
     
     @Override
     public void gameSet(boolean isWin1Player) {
-        // TODO Auto-generated method stub
-        
+        this.form.setWiner(isWin1Player?"1P":"2P");
     }
     
 }

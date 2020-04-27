@@ -27,7 +27,15 @@ public class BattleForm {
     private Map<String, Integer> pieceCountOf1P = new HashMap<>();
     private Map<String, Integer> pieceCountOf2P = new HashMap<>();
     
-    private boolean is1PlayerTurn = true;
+    private boolean is1PlayerTurn;
+    
+    private String winer;
+    
+    private String clickedPoint;
+    
+    private boolean is1PlayerStorePiece;
+    
+    private String storePieceType;
     
     public Map<String, String> getPieceOnBoard() {
         return pieceOnBoard;
@@ -56,10 +64,38 @@ public class BattleForm {
         this.pieceCountOf2P = pieceCountOf2P;
     }
     
-    public boolean isIs1PlayerTurn() {
+    public boolean getIs1PlayerTurn() {
         return is1PlayerTurn;
     }
     public void setIs1PlayerTurn(boolean is1PlayerTurn) {
         this.is1PlayerTurn = is1PlayerTurn;
+    }
+    
+    public String getWiner() {
+        return winer;
+    }
+    public void setWiner(String winer) {
+        this.winer = winer;
+    }
+    
+    public String getClickedPoint() {
+        return clickedPoint;
+    }
+    public void setClickedPoint(String clickedPoint) {
+        this.clickedPoint = clickedPoint;
+    }
+    
+    public boolean getIs1PlayerStorePiece() {
+        return is1PlayerStorePiece;
+    }
+    public void setIs1PlayerStorePiece(boolean is1PlayerStorePiece) {
+        this.is1PlayerStorePiece = is1PlayerStorePiece;
+    }
+    
+    public String getStorePieceType() {
+        return storePieceType;
+    }
+    public void setStorePieceType(String tookPieceType) {
+        this.storePieceType = tookPieceType;
     }
 }

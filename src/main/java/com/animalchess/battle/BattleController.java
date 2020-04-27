@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.animalchess.battle.piece.PieceType;
 import com.animalchess.battle.view.BattleViewController;
@@ -20,32 +21,27 @@ public class BattleController {
     private BattleViewController viewController;
     
     @GetMapping("/battle")
-    public String battleGet(Model model){
-        return "battle";
-    }
-    
-    @PostMapping("/battle")
-    public String battlePost(Model model){
+    public String battleGet(Model model, @RequestParam("is1PlayerTurn")boolean is1PlayerTurn){
+        model.addAttribute("battleForm", this.viewController.init(is1PlayerTurn));
         return "battle";
     }
     
     @PostMapping("/battle/init")
     public String init(Model model, BattleForm form, HttpServletRequest request){
-        boolean is1PlayerTurn = (boolean)request.getAttribute("is1PlayerTurn");
-        model.addAttribute("battleForm", this.viewController.init(is1PlayerTurn));
+        model.addAttribute("battleForm", this.viewController.init(form.getIs1PlayerTurn()));
         return "battle";
     }
     
     @PostMapping("/battle/clickedPiece")
     public String clickedPiece(Model model, BattleForm form, HttpServletRequest request) {
-        Point clickedPoint = parsePoint(request.getAttribute("clickedPoint"));
+        Point clickedPoint = parsePoint(form.getClickedPoint());
         model.addAttribute("battleForm", this.viewController.clickedPiece(clickedPoint));
         return "battle";
     }
     
     @PostMapping("/battle/clickedCanMovePoint")
     public String clickedCanMovePoint(Model model, BattleForm form, HttpServletRequest request) {
-        Point movePoint = parsePoint(request.getAttribute("canMovePoint"));
+        Point movePoint = parsePoint(form.getClickedPoint());
         model.addAttribute("battleForm", this.viewController.clickedMoveRange(movePoint));
         return "battle";
     }
@@ -63,10 +59,8 @@ public class BattleController {
     
     @PostMapping("/battle/clickedTookPiece")
     public String clickedTookPiece(Model model, BattleForm form, HttpServletRequest request) {
-        boolean is1PlayersPiece = (boolean)request.getAttribute("is1PlayersPiece");
-        String typeName = String.valueOf(request.getAttribute("clickedType"));
-        PieceType type = Enum.valueOf(PieceType.class, typeName);
-        model.addAttribute("battleForm", this.viewController.clickedStorePiece(type, is1PlayersPiece));
+        PieceType type = Enum.valueOf(PieceType.class, form.getStorePieceType());
+        model.addAttribute("battleForm", this.viewController.clickedStorePiece(type, form.getIs1PlayerStorePiece()));
         return "battle";
     }
 }

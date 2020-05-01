@@ -72,6 +72,7 @@ const init = function(){
 };
 
 const back = function(){
+    document.battleForm.method = "get";
     submit("/menu");
 };
 

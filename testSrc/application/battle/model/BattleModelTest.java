@@ -78,9 +78,11 @@ class BattleModelTest {
             
             return true;
         };
-        Stream<Entry<Point, Piece>> t = target.entrySet().stream();
-        Stream<Entry<Point, Piece>> a = answer.entrySet().stream();
-        return t.allMatch(e1 -> a.anyMatch(e2 -> isSameSituation.apply(e1, e2)));
+//        Stream<Entry<Point, Piece>> t = target.entrySet().stream();
+//        Stream<Entry<Point, Piece>> a = answer.entrySet().stream();
+        return target.entrySet().stream()
+                .allMatch(e1 -> answer.entrySet().stream()
+                        .anyMatch(e2 -> isSameSituation.apply(e1, e2)));
     }
     
     private boolean isSamePieceCount(Map<PieceType, Integer> target, Map<PieceType, Integer> answer) {

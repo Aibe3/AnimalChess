@@ -1,7 +1,7 @@
 # AnimalChess
 JavaFXを使用した動物将棋
 
-と買いてはあるが
+と書いてはあるが現在
 　１、JavaFXで動物将棋を作る
 　２、如何せん作りが悪いのでMVPに当て嵌め改修
 　３、SpringWebにModel, Interface, etcを移行

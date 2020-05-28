@@ -61,14 +61,14 @@ public class BattleModel implements IBattleModel {
         this.pieceOnBoard = new HashMap<>();
         // 1P
         addInitializedPiece(PieceType.Duck, new Point(1, 2), true);
-        addInitializedPiece(PieceType.Giraffe, new Point(2, 3), true);
         addInitializedPiece(PieceType.Elephant, new Point(0, 3), true);
+        addInitializedPiece(PieceType.Giraffe, new Point(2, 3), true);
         addInitializedPiece(PieceType.Lion, new Point(1, 3), true);
         
         // 2P
         addInitializedPiece(PieceType.Duck, new Point(1, 1), false);
-        addInitializedPiece(PieceType.Giraffe, new Point(0, 0), false);
         addInitializedPiece(PieceType.Elephant, new Point(2, 0), false);
+        addInitializedPiece(PieceType.Giraffe, new Point(0, 0), false);
         addInitializedPiece(PieceType.Lion, new Point(1, 0), false);
     }
     
@@ -79,10 +79,10 @@ public class BattleModel implements IBattleModel {
     
     private History createHistory() {
         History now = new History();
-        now.setPieceOnBoard(this.pieceOnBoard);
         now.setIs1PlayerTurn(this.is1PlayerTurn);
         now.setPieceCountOf1P(this.pieceCountOf1P);
         now.setPieceCountOf2P(this.pieceCountOf2P);
+        now.setPieceOnBoard(this.pieceOnBoard);
         return now;
     }
     
@@ -91,8 +91,14 @@ public class BattleModel implements IBattleModel {
         List<Point> points = new ArrayList<>();
         Piece clickedPiece = this.pieceOnBoard.get(piecePoint);
         
-        if (clickedPiece.is1PlayersPiece() != this.is1PlayerTurn) return points;
-        if (clickedPiece == this.selectedPiece) return points;
+        if (clickedPiece.is1PlayersPiece() != this.is1PlayerTurn) {
+            this.selectedPiece = null;
+            return points;
+        }
+        if (clickedPiece == this.selectedPiece) {
+            this.selectedPiece = null;
+            return points;
+        }
         
         this.selectedPiece = clickedPiece;
         
@@ -169,13 +175,19 @@ public class BattleModel implements IBattleModel {
     public List<Point> getCanPopPoint(PieceType storePiece, boolean is1PlayersPiece) {
         List<Point> points = new ArrayList<>();
         
-        if (this.is1PlayerTurn != is1PlayersPiece) return points;
+        if (this.is1PlayerTurn != is1PlayersPiece) {
+            this.selectedPiece = null;
+            return points;
+        }
         Function<Boolean, Boolean> existPieceToPut = b -> {
             Function<Map<PieceType, Integer>, Boolean> hasOneOrMore = m -> m.get(storePiece) >= 1;
             if (b) return hasOneOrMore.apply(this.pieceCountOf1P);
             else return hasOneOrMore.apply(this.pieceCountOf2P);
         };
-        if (!existPieceToPut.apply(is1PlayersPiece)) return points;
+        if (!existPieceToPut.apply(is1PlayersPiece)) {
+            this.selectedPiece = null;
+            return points;
+        }
         
         this.selectedPiece = storePiece.toPiece(is1PlayersPiece);
         

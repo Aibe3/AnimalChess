@@ -1,14 +1,14 @@
-package application.battle.board;
+package application.battle.piece;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class BoardTest {
-
+class PieceTypeTest {
+    
     @Test
-    void test() {
+    void testToPiece() {
         fail("Not yet implemented");
     }
-
+    
 }

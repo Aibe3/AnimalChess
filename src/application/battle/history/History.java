@@ -1,7 +1,6 @@
 package application.battle.history;
 
 import java.awt.Point;
-import java.util.HashMap;
 import java.util.Map;
 
 import application.battle.piece.Piece;
@@ -17,18 +16,16 @@ public class History {
     private Map<PieceType, Integer> pieceCountOf1P;
     private Map<PieceType, Integer> pieceCountOf2P;
     
-//    private int tookDuckCount = 0;
-//    private int tookElephantCount = 0;
-//    private int tookGiraffeCount = 0;
-//    private int takenDuckCount = 0;
-//    private int takenElephantCount = 0;
-//    private int takenGiraffeCount = 0;
-//    
-    private Boolean is1PlayerTurn;
+    private boolean is1PlayerTurn;
     
-    public Boolean hasFinishedGame() {
+    /**
+     * 勝敗が決しているかを返す
+     * 操作者していないプレイヤーのライオンの駒が盤面にない場合ゲームの決着と判定する
+     * @return true:決着, false:ゲームを続行
+     */
+    public boolean hasFinishedGame() {
         return this.pieceOnBoard.values().stream().noneMatch(p -> {
-            return p.is1PlayersPiece() == this.is1PlayerTurn && p.toPieceType() == PieceType.Lion;
+            return p.toPieceType() == PieceType.Lion && p.is1PlayersPiece() == this.is1PlayerTurn;
         });
     }
     
@@ -58,68 +55,38 @@ public class History {
     
     public int getTookDuckCount() {
         return this.pieceCountOf1P.get(PieceType.Duck);
-//        return tookDuckCount;
     }
     
-//    public void setTookDuckCount(int tookDuckCount) {
-//        this.tookDuckCount = tookDuckCount;
-//    }
-//    
     public int getTookElephantCount() {
         return this.pieceCountOf1P.get(PieceType.Elephant);
-//        return tookElepahntCount;
     }
     
-//    public void setTookElepahntCount(int tookElephantCount) {
-//        this.tookElephantCount = tookElephantCount;
-//    }
-//    
     public int getTookGiraffeCount() {
         return this.pieceCountOf1P.get(PieceType.Giraffe);
-//        return tookGiraffeCount;
     }
     
-//    public void setTookGiraffeCount(int tookGiraffeCount) {
-//        this.tookGiraffeCount = tookGiraffeCount;
-//    }
-//    
     public int getTakenDuckCount() {
         return this.pieceCountOf2P.get(PieceType.Duck);
-//        return takenDuckCount;
     }
     
-//    public void setTakenDuckCount(int takenDuckCount) {
-//        this.takenDuckCount = takenDuckCount;
-//    }
-//    
     public int getTakenElephantCount() {
         return this.pieceCountOf2P.get(PieceType.Elephant);
-//        return takenElephantCount;
     }
     
-//    public void setTakenElephantCount(int takenElephantCount) {
-//        this.takenElephantCount = takenElephantCount;
-//    }
-//    
     public int getTakenGiraffeCount() {
         return this.pieceCountOf2P.get(PieceType.Giraffe);
-//        return takenGiraffeCount;
     }
     
-//    public void setTakenGiraffeCount(int takenGiraffeCount) {
-//        this.takenGiraffeCount = takenGiraffeCount;
-//    }
-//    
     /**
      * {@link History}クラスは操作完了後〜次操作までのキャプチャのため、完了した操作が1Pによる物ならばfalseが返る
      * 
      * @return true:次の操作を行えるプレイヤーが1P, false:否
      */
-    public Boolean is1PlayerTurn() {
+    public boolean is1PlayerTurn() {
         return is1PlayerTurn;
     }
     
-    public void setIs1PlayerTurn(Boolean is1PlayerTurn) {
+    public void setIs1PlayerTurn(boolean is1PlayerTurn) {
         this.is1PlayerTurn = is1PlayerTurn;
     }
 }

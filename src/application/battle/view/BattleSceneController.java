@@ -120,7 +120,7 @@ public class BattleSceneController implements IBattleViewController, Initializab
     @Override
     public void gameSet(boolean isWin1Player) {
         BattleFinishedDialog.show(isWin1Player);
-        presenter.init(DecideFirstPlayerDialog.show());
+        this.presenter.init(DecideFirstPlayerDialog.show());
     }
     
     @FXML

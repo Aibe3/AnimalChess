@@ -20,11 +20,12 @@ class DialogCore {
      * @param dialog
      * @return
      */
-    public ButtonType show(Dialog dialog) {
+    @SuppressWarnings("unchecked")
+    public ButtonType show(Dialog<?> dialog) {
         // Optionalが使ってみたくてこの実装にしてしまったが。。。
         // 本来この状態でnullが帰ることはなさそう。。。
         // Dialog.showAndWait()の後にDaialog.getResult()で全然大丈夫だぁ。。。
-        Optional<ButtonType> result = dialog.showAndWait();
+        Optional<ButtonType> result = (Optional<ButtonType>) dialog.showAndWait();
         if (result.isPresent()) {
             return result.get();
         } else {

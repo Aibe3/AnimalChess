@@ -17,7 +17,11 @@ public class LoginPresenter implements ILoginPresenter {
     }
 
     @Override
-    public boolean isValidUser(String id, String password){
-        return model.isValidUser(id, password);
+    public void login(String id, String password){
+        if(this.model.isValidUser(id, password)){
+            this.view.showMenu();
+        }else{
+            this.view.showLoginError();
+        }
     }
 }

@@ -3,18 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Animal Chess - Menu</title>
-    <link rel="stylesheet" href="../menu/menu.css">
+
+    <link rel="stylesheet" href="/css/menu.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 </head>
 <body>
-    <div class="header">
-        <p>Animal Chess for Spring</p>
-    </div>
-    <div class="body">
+    <header>
+        <div class="header-inner">
+            <div class="header-title">Spring Animal Chess</div>
+            <nav class="header-nav">
+                <div class="header-nav-item">
+                    <a href="#!" class="header-button logout">logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="main-area">
         <form name="menuForm" method="get">
-            <input name="battle" type="button" value="battle" onclick="onClickBattle();">
-            <input name="config" type="button" value="config" onclick="onConfigClicked();">
+            <div class="menu-list">
+                <div class="menu-item">
+                    <a href="#!" class="menu-battle" onclick="onClickBattle();">battle</a>
+                </div>
+                <div class="menu-item">
+                    <a href="#!" class="menu-config" onclick="onConfigClicked();">config</a>
+                </div>
+            </diu>
         </form>
-    </div>
+    </section>
 </body>
-<script type="text/javascript" src="../menu/menu.js"></script>
+<script type="text/javascript" src="/js/menu.js"></script>
 </html>

@@ -1,0 +1,60 @@
+body {
+    font-family: "Arial", "Yu Gothic", "YuGothic", sans-serif;
+    font-size: 16px;
+}
+
+header {
+    .header-title {
+        background-color: rgba(145, 145, 145, 0.541);
+        color: white;
+        margin: 1rem;
+        padding: 1.5rem 0;
+
+        h1 {
+            text-align: center;
+            vertical-align: middle;
+            margin: 0;
+        }
+    }
+}
+
+section.main-area {
+    padding: 1rem;
+
+    .login-items {
+        width: 400px;
+        height: 400px;
+        margin: 0 auto;
+
+        .email, .password, .login {
+            text-align: center;
+            margin: 2rem auto;
+
+            .item-name {
+                display: inline-block;
+                text-align: center;
+                width: 6rem;
+                padding-right: 2rem;
+            }
+
+            input[type="email"], input[type="password"] {
+                width: 200px;
+                height: 20px;
+                padding: 10px 0;
+            }
+
+            input[type="submit"] {
+                width: 140px;
+                height: 30px;
+            }
+        }
+    }
+}
+
+footer {
+    .footer-area {
+        background-color: rgba(145, 145, 145, 0.541);
+        margin: 1rem;
+        padding: 1rem;
+    }
+}

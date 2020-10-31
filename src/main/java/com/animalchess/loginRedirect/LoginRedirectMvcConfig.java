@@ -20,6 +20,8 @@ public class LoginRedirectMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registory){
         registory.addInterceptor(loginRedirector)
                     .addPathPatterns("/**")
+                    .excludePathPatterns("/css/**")
+                    .excludePathPatterns("/js/**")
                     .excludePathPatterns("/login");
     }
 }

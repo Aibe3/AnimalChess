@@ -4,25 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Animal Chess - Login</title>
-    <link rel="stylesheet" href="../login/login.css">
+    <link type="text/css" href="/css/login.css" rel="stylesheet" >
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script type="text/javascript" src="../login/login.js"></script>
+
 </head>
 
 <body>
-    <!-- <div th:replace="header::header"></div> -->
-    <form method="POST">
-        <div class="email">
-            <input type="email" name="email">
+    <header>
+        <div class="header-title">
+            <h1>Spring Animal Chess</h1>
         </div>
-        <div class="password">
-            <input type="password" name="password">
-        </div>
-        <div class="submit">
-            <input type="submit" value="login">
-        </div>
-    </form>
-    <!-- <div th:replace="footer::footer"></div> -->
+    </header>
+    <section class="main-area">
+        <form method="POST">
+            <div class="login-items">
+                <input type="hidden" name="csrfToken">
+                <div class="email">
+                    <div class="item-name">email</div>
+                    <input type="email" name="email">
+                </div>
+                <div class="password">
+                    <div class="item-name">password</div>
+                    <input type="password" name="password">
+                </div>
+                <div class="login">
+                    <input type="submit" value="login">
+                </div>
+            </div>
+        </form>
+    </section>
 </body>
-
+<script type="text/javascript" src="/js/login.js"></script>
 </html>

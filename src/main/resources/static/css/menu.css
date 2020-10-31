@@ -1,0 +1,135 @@
+header {
+  background-color: rgba(145, 145, 145, 0.541);
+  color: white;
+  margin: 1rem;
+  padding: 1rem 0;
+  border-radius: 3px;
+}
+
+header .header-inner {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  max-width: 1024px;
+  height: 60px;
+  padding: 0 0.8em;
+  margin: 0 auto;
+  font-size: 1.2em;
+}
+
+header .header-inner .header-title {
+  text-align: center;
+  vertical-align: middle;
+  margin: 0;
+  font-size: 2em;
+}
+
+header .header-inner .header-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+header .header-inner .header-nav .header-nav-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-left: 16px;
+}
+
+header .header-inner .header-nav .header-button {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  display: inline-block;
+  padding: 0.5em 1.2em;
+  font-size: 0.8em;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+header .header-inner .header-nav .logout {
+  display: inline-block;
+  color: rgba(145, 145, 145, 0.541);
+  background-color: #fff;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: 1px rgba(145, 145, 145, 0.541) solid;
+  border-radius: 3px;
+  -webkit-transition: 0.4s ease;
+  transition: 0.4s ease;
+  margin-right: 0%;
+}
+
+header .header-inner .header-nav .logout:hover {
+  color: #fff;
+  background: #00b5ad;
+}
+
+section.main-area {
+  margin: 2em 0;
+}
+
+section.main-area .menu-list {
+  width: 600px;
+  height: 150px;
+  margin: 0 auto;
+  vertical-align: middle;
+}
+
+section.main-area .menu-list .menu-item {
+  text-align: center;
+}
+
+section.main-area .menu-list .menu-item .menu-battle, section.main-area .menu-list .menu-item .menu-config {
+  display: inline-block;
+  padding: 0.4em 1.6em;
+  font-size: 1.3em;
+  color: rgba(145, 145, 145, 0.541);
+  text-decoration: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: 2px rgba(145, 145, 145, 0.541) solid;
+  border-radius: 3px;
+  -webkit-transition: 0.2s ease;
+  transition: 0.2s ease;
+  position: relative;
+  width: 140px;
+  height: 30px;
+  margin-top: 2em;
+  text-align: center;
+}
+
+section.main-area .menu-list .menu-item .menu-battle:hover, section.main-area .menu-list .menu-item .menu-config:hover {
+  color: #fff;
+  background: #00b5ad;
+}
+
+section.main-area input[type="submit"], section.main-area input[type="button"] {
+  display: block;
+  position: relative;
+  left: calc(100% / 2 - 60px / 2);
+  width: 140px;
+  height: 30px;
+  margin-top: 10px;
+}
+/*# sourceMappingURL=menu.css.map */

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Animal Chess - Battle</title>
+    <link rel="stylesheet" href="/css/battle.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/battle.js"></script>
+</head>
+<body>
+    <form action="#" name="battleForm" th:object="${battleForm}" method="post" >
+        <div class="left" >
+            <p>2P</p>
+            <div class="pieceCountOf2P" th:each="entry : *{pieceCountOf2P}">
+                <p th:if="${entry.key} == Giraffe">Giraffe * <span th:text="${entry.value}" ></span></p>
+                <p th:if="${entry.key} == Elephant">Elephant * <span th:text="${entry.value}" ></span></p>
+                <p th:if="${entry.key} == Duck">Duck * <span th:text="${entry.value}" ></span></p>
+            </div>
+            <input type="button" value="reset" onclick="init();">
+            <input type="button" value="back" onclick="back();">
+        </div>
+        <div class="center">
+            <table class="board" >
+                <tr>
+                    <td id="0-0"></td>
+                    <td id="1-0"></td>
+                    <td id="2-0"></td>
+                </tr>
+                <tr>
+                    <td id="0-1"></td>
+                    <td id="1-1"></td>
+                    <td id="2-1"></td>
+                </tr>
+                <tr>
+                    <td id="0-2"></td>
+                    <td id="1-2"></td>
+                    <td id="2-2"></td>
+                </tr>
+                <tr>
+                    <td id="0-3"></td>
+                    <td id="1-3"></td>
+                    <td id="2-3"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="right" >
+            <p>1P</p>
+            <div class="pieceCountOf1P" th:each="entry : *{pieceCountOf1P}">
+                <p th:if="${entry.key} == Giraffe">Giraffe * <span th:text="${entry.value}" ></span></p>
+                <p th:if="${entry.key} == Elephant">Elephant * <span th:text="${entry.value}" ></span></p>
+                <p th:if="${entry.key} == Duck">Duck * <span th:text="${entry.value}" ></span></p>
+            </div>
+        </div>
+        <input type="hidden" name="is1PlayerTurn" th:field="*{is1PlayerTurn}">
+        <input type="hidden" name="winer" th:field="*{winer}">
+        <script th:inline="javascript" th:each="entry : *{pieceOnBoard}" >
+        putPieceImage([[${entry.value}]], [[${entry.key}]]);
+        </script>
+        <script th:inline="javascript" th:each="point : *{canMovePoints}" >
+        putCanMovePoint([[${point}]]);
+        </script>
+        <script th:inline="javascript" >
+        gameSet([[*{winer}]]);
+        </script>
+    </form>
+</body>
+</html>

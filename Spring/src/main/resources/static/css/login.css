@@ -1,0 +1,57 @@
+body {
+  font-family: "Arial", "Yu Gothic", "YuGothic", sans-serif;
+  font-size: 16px;
+}
+
+header .header-title {
+  background-color: rgba(145, 145, 145, 0.541);
+  color: white;
+  margin: 1rem;
+  padding: 1.5rem 0;
+}
+
+header .header-title h1 {
+  text-align: center;
+  vertical-align: middle;
+  margin: 0;
+}
+
+section.main-area {
+  padding: 1rem;
+}
+
+section.main-area .login-items {
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+}
+
+section.main-area .login-items .email, section.main-area .login-items .password, section.main-area .login-items .login {
+  text-align: center;
+  margin: 2rem auto;
+}
+
+section.main-area .login-items .email .item-name, section.main-area .login-items .password .item-name, section.main-area .login-items .login .item-name {
+  display: inline-block;
+  text-align: center;
+  width: 6rem;
+  padding-right: 2rem;
+}
+
+section.main-area .login-items .email input[type="email"], section.main-area .login-items .email input[type="password"], section.main-area .login-items .password input[type="email"], section.main-area .login-items .password input[type="password"], section.main-area .login-items .login input[type="email"], section.main-area .login-items .login input[type="password"] {
+  width: 200px;
+  height: 20px;
+  padding: 10px 0;
+}
+
+section.main-area .login-items .email input[type="submit"], section.main-area .login-items .password input[type="submit"], section.main-area .login-items .login input[type="submit"] {
+  width: 140px;
+  height: 30px;
+}
+
+footer .footer-area {
+  background-color: rgba(145, 145, 145, 0.541);
+  margin: 1rem;
+  padding: 1rem;
+}
+/*# sourceMappingURL=login.css.map */

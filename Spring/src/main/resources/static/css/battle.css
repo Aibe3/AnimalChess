@@ -1,0 +1,70 @@
+@charset "UTF-8";
+
+body{
+    font-size: 15px;
+}
+
+.left, .center, .right{
+    display: inline-block;
+    height: 400px;
+    text-align: center;
+}
+
+.left, .right{
+    width: 150px;
+}
+
+.pieceCountOf1P p,
+.pieceCountOf2P p{
+    cursor: pointer;
+}
+
+.center{
+    width: 400px;
+    vertical-align: middle;
+}
+
+.board{
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    background-color: white;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+.board td{
+    width: 70px;
+    height: 70px;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    position: relative;
+}
+
+.board td img{
+    display: table-cell;
+    vertical-align: middle;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.canMovePoint{
+    width: 70px;
+    height: 70px;
+    background-color: yellow;
+    opacity: 50%;
+    position: absolute;
+    top: 0;
+    z-index: 99;
+    cursor: pointer;
+}
+
+input[type="button"]{
+    display: block;
+    position: relative;
+    size: 60px;
+    margin: 20px auto;
+}

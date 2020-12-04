@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.battle.view.BattleSceneController">
+   <children>
+      <GridPane fx:id="board" alignment="CENTER" gridLinesVisible="true" layoutX="165.0" layoutY="50.0" prefHeight="300.0" prefWidth="270.0" style="-fx-background-color: ffffff;">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+      </GridPane>
+      <Label fx:id="tookDucksOf1P" layoutX="490.0" layoutY="271.0" onMouseClicked="#onTookDucksOf1PClicked" text="Duck * 0" textAlignment="CENTER" />
+      <Label fx:id="tookElephantsOf1P" layoutX="480.0" layoutY="350.0" onMouseClicked="#onTookElephantsOf1PClicked" text="Elephant * 0" textAlignment="CENTER" />
+      <Label fx:id="tookGiraffesOf1P" layoutX="486.0" layoutY="311.0" onMouseClicked="#onTookGiraffesOf1PClicked" text="Giraffe * 0" textAlignment="CENTER" />
+      <Label fx:id="tookDucksOf2P" layoutX="43.0" layoutY="113.0" onMouseClicked="#onTookDucksOf2PClicked" text="Duck * 0" textAlignment="CENTER" />
+      <Label fx:id="tookElephantsOf2P" layoutX="33.0" layoutY="33.0" onMouseClicked="#onTookElephantsOf2PClicked" text="Elephant * 0" textAlignment="CENTER" />
+      <Label fx:id="tookGiraffesOf2P" layoutX="39.0" layoutY="75.0" onMouseClicked="#onTookGiraffesOf2PClicked" text="Giraffe * 0" textAlignment="CENTER" />
+      <Button fx:id="back" layoutX="30.0" layoutY="345.0" mnemonicParsing="false" onMouseClicked="#onBackClicked" prefHeight="20.0" prefWidth="80.0" text="Back" />
+      <Button fx:id="reset" layoutX="30.0" layoutY="297.0" mnemonicParsing="false" onMouseClicked="#onResetClicked" prefHeight="20.0" prefWidth="80.0" text="Reset" />
+      <Label fx:id="secondPlayerLabel" layoutX="101.0" layoutY="152.0" text="2P" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="firstPlayerLabel" layoutX="471.0" layoutY="234.0" text="1P" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
